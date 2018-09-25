@@ -1,0 +1,11 @@
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\bin\Debug\netcoreapp2.1\SortYAML.deps.json
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\bin\Debug\netcoreapp2.1\SortYAML.runtimeconfig.json
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\bin\Debug\netcoreapp2.1\SortYAML.runtimeconfig.dev.json
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\bin\Debug\netcoreapp2.1\SortYAML.dll
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\bin\Debug\netcoreapp2.1\SortYAML.pdb
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.csprojAssemblyReference.cache
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.csproj.CoreCompileInputs.cache
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.AssemblyInfoInputs.cache
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.AssemblyInfo.cs
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.dll
+C:\Users\clupo\Source\Repos\SortYAML\SortYAML\obj\Debug\netcoreapp2.1\SortYAML.pdb
