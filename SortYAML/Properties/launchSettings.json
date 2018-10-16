@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SortYAML": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\clupo\\Source\\Repos\\SortYAML\\SortYAML\\swagger.yaml 1372 10000000 \"^  \\S\" yes"
+    }
+  }
+}

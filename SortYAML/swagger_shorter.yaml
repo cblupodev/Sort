@@ -1,0 +1,671 @@
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: Stage
+# during dev, should point to your local machine
+host: localhost:10010
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  CommonSourceHeader:
+    $ref: "http://localhost:48080/definitions/swagger.yaml#/parameters/CommonSourceHeader"
+paths:
+  /customers/siteGroup/{siteGroupId}/passTypeMapping:
+    x-swagger-router-controller: passTypeMappings
+    parameters:
+      - $ref: '#/parameters/CommonSourceHeader'
+    get:
+      description: Get a list of all pass type mappings in a site group
+      summary: Get Pass Type Mappings
+      tags:
+      - Pass Type Mappings
+      operationId: getPassTypeMappings
+      produces:
+      - application/json
+      parameters:
+      - name: siteGroupId
+        in: path
+        required: true
+        type: string
+        description: Site group identifier
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/GetPassTypeMappingListResponse'
+          examples:
+            application/json:
+              _links:
+                self:
+                  href: /v1/customers/siteGroup/00000000-0000-0000-0000-000000000000/passTypeMapping?skip=0&take=100
+              _embedded:
+                mappings:
+                - _links:
+                    self:
+                      href: /v1/customers/siteGroup/00000000-0000-0000-0000-000000000000/passTypeMapping/00000000-0000-0000-0000-000000000001
+                  siteGroupId: 00000000-0000-0000-0000-000000000000
+                  mappingId: 00000000-0000-0000-0000-000000000001
+                  name: Season Pass
+              count: 1
+              resultCode: 200000
+              message: Success
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+        404:
+          description: Site Group Not Found
+          schema:
+            $ref: '#/definitions/ApiResponseSiteGroupNotFound'
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+    put:
+      description: Create a new pass type mapping.
+      summary: Create Pass Type Mapping
+      tags:
+      - Pass Type Mappings
+      operationId: createPassTypeMapping
+      produces:
+      - application/json
+      parameters:
+      - name: siteGroupId
+        in: path
+        required: true
+        type: string
+        description: Site group identifier
+      - name: body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/CreatePassTypeMappingRequest'
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/GetPassTypeMappingResponse'
+          examples:
+            application/json:
+              _links:
+                self:
+                  href: /v1/customers/siteGroup/00000000-0000-0000-0000-000000000000/passTypeMapping/00000000-0000-0000-0000-000000000001
+              _embedded:
+                locations:
+                - _links:
+                    self:
+                      href: /v1/customers/siteGroup/00000000-0000-0000-0000-000000000000/passTypeMapping/00000000-0000-0000-0000-000000000001/location/00000000-0000-0000-0000-000000000002
+                  locationId: 00000000-0000-0000-0000-000000000002
+                  passTypeId: 00000000-0000-0000-0000-000000000003
+              siteGroupId: 00000000-0000-0000-0000-000000000000
+              mappingId: 00000000-0000-0000-0000-000000000001
+              name: Season Pass
+              resultCode: 200000
+              message: Success
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/ApiResponseCreate'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        404:
+          description: Site Group Not Found
+          schema:
+            $ref: '#/definitions/ApiResponseSiteGroupNotFound'
+        409:
+          description: Conflict
+          schema:
+            $ref: '#/definitions/ApiResponseConflict'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+  /customers/site/{siteId}/passType:
+    x-swagger-router-controller: passTypes
+    parameters:
+      - $ref: '#/parameters/CommonSourceHeader'
+    post:
+      description: Creates a new pass type for this site
+      summary: createPassType
+      tags:
+      - Pass Types
+      operationId: createPassType
+      produces:
+      - application/json
+      parameters:
+      - name: siteId
+        in: path
+        required: true
+        type: string
+        description: Site identifier (ex. '00000000-0000-0000-0000-000000000000')
+      - name: body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/CreatePassTypeRequest'
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/CreatePassTypeResponse'
+        409:
+          description: Conflict
+          schema:
+            $ref: '#/definitions/ApiResponseConflict'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: 'Forbidden'
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+    get:
+      description: Gets a list of pass types defined at this site.
+      summary: Get Pass Types
+      tags:
+      - Pass Types
+      operationId: getPassTypes
+      produces:
+      - application/json
+      parameters:
+      - name: siteId
+        in: path
+        required: true
+        type: string
+        description: Site identifier (ex. '00000000-0000-0000-0000-000000000000')
+      - name: skip
+        in: query
+        required: false
+        type: number
+        format: integer
+        description: Results to skip
+        default: 0
+        minimum: 0
+      - name: take
+        in: query
+        required: false
+        type: number
+        format: integer
+        description: Maximum results to return
+        default: 50
+        minimum: 1
+        maximum: 100
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/GetPassTypesResponse'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ApiResponseBadRequest'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+  /customers/site/{siteId}/passType/{passTypeId}:
+    x-swagger-router-controller: passTypes
+    parameters:
+      - $ref: '#/parameters/CommonSourceHeader'
+    put:
+      description: Edits a pass type. Fields which are not included in the posted
+        JSON body may be filled with default values for new records, and will be left
+        unchanged for existing records.
+
+        If `createIfMissing` is `true`, then a record will be created if the pass type
+        is not found.  This is typically only used for synchronization.
+      summary: updatePassType
+      tags:
+      - Pass Types
+      operationId: updatePassType
+      produces:
+      - application/json
+      parameters:
+      - name: siteId
+        in: path
+        required: true
+        type: string
+        description: Site identifier (ex. '00000000-0000-0000-0000-000000000000')
+      - name: passTypeId
+        in: path
+        required: true
+        type: string
+        description: Pass type identifier (ex. '00000000-0000-0000-0000-000000000001')
+      - name: createIfMissing
+        in: query
+        required: false
+        type: string # Must be string to accept capitalized values for backwards compatibility
+        description: If `true`, indicates that missing pass types should be created instead of returning 404.
+      - name: body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/BasePassTypeRequest'
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/EditPassTypeResponse'
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/CreatePassTypeResponse'
+        409:
+          description: Conflict
+          schema:
+            $ref: '#/definitions/ApiResponseConflict'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+        404:
+          description: Pass Type Not Found
+          schema:
+            $ref: '#/definitions/ApiResponsePassTypeNotFound'
+    get:
+      description: Gets a pass type defined at this site.
+      summary: Get Pass Type
+      tags:
+      - Pass Types
+      operationId: getPassType
+      produces:
+      - application/json
+      parameters:
+      - name: siteId
+        in: path
+        required: true
+        type: string
+        description: Site identifier (ex. '00000000-0000-0000-0000-000000000000')
+      - name: passTypeId
+        in: path
+        required: true
+        type: string
+        description: Pass type identifier (ex. '00000000-0000-0000-0000-000000000001')
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/GetPassTypeResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+        404:
+          description: Pass Type Not Found
+          schema:
+            $ref: '#/definitions/ApiResponsePassTypeNotFound'
+    delete:
+      description: Deletes pass type.
+      summary: Delete Pass type
+      tags:
+      - Pass Types
+      operationId: deletePassType
+      produces:
+      - application/json
+      parameters:
+      - name: siteId
+        in: path
+        required: true
+        type: string
+        description: Site identifier (ex. '00000000-0000-0000-0000-000000000000')
+      - name: passTypeId
+        in: path
+        required: true
+        type: string
+        description: Pass type identifier (ex. '00000000-0000-0000-0000-000000000001')
+      - name: Authorization
+        in: header
+        required: false
+        type: string
+        format: token
+        description: sync-token
+      responses:
+        204:
+          description: ''
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ApiResponseBadRequest'
+        409:
+          description: Conflict
+          schema:
+            $ref: '#/definitions/ApiResponseConflict'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ApiResponseUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ApiResponseForbidden'
+definitions:
+  BasePassTypeRequest:
+    title: Pass Type Base Request
+    type: object
+    properties:
+      passTypeNo:
+        description: Local number for this pass type used by Advantage
+        type: number
+        format: integer
+        example: 5
+      description:
+        description: Descriptive name of the pass type
+        type: string
+        example: 'Pass Type Desc'
+      passClassId:
+        description: Pass class id
+        type: number
+        format: integer
+        example: 1
+      passLayoutType:
+        description: Pass layout type
+        type: number
+        format: integer
+        example: 1
+      passLayout:
+        description: Pass layout id
+        type: number
+        format: integer
+        example: 1
+      startDate:
+        description: Start Date
+        type: string
+        format: date-time
+        example: 2016-01-01T01:00:00Z
+      endDays:
+        description: End days
+        type: number
+        format: integer
+        example: 7
+      maxUses:
+        description: Max uses count
+        type: number
+        format: integer
+        example: 20
+      maxUsesPerDay:
+        description: Max uses count per day
+        type: number
+        format: integer
+        example: 10
+      maxDays:
+        description: Max days
+        type: number
+        format: integer
+        example: 1
+      buddyPasses:
+        description: Buddy passes
+        type: number
+        format: integer
+        example: 100
+      maxBuddyPassesPerDay:
+        description: Max buddy passes per day
+        type: number
+        format: integer
+        example: 100
+      discountId:
+        description: Id of discount
+        type: number
+        format: integer
+        example: 12
+      firstDayDiscountId:
+        description: Id of discount for first day
+        type: number
+        format: integer
+        example: 100
+      daysOfWeek:
+        description: Days of week
+        type: number
+        format: integer
+        example: 7
+      allowSaleWithoutCustomer:
+        description: Indicates if sale allowed without customer information
+        type: boolean
+        example: false
+      corporatePass:
+        description: Indicates if pass is cororate
+        type: boolean
+        example: false
+      minimumAge:
+        description: Minimum customer age
+        type: number
+        format: integer
+        example: 18
+      maximumAge:
+        description: Maximum customer age
+        type: number
+        format: integer
+        example: 60
+    required:
+    - passTypeNo
+    - description
+  PassType:
+    title: Pass Type
+    type: object
+    properties:
+      _links:
+        allOf:
+        - $ref: '#/definitions/HalLinks'
+        example:
+          self:
+            href: /v1/customers/site/00000000-0000-0000-000000000000/passType/00000000-0000-0000-000000000001
+      passTypeId:
+        description: Pass type unique identifier
+        type: string
+        example: '00000000-0000-0000-000000000001'
+      passTypeNo:
+        description: Local number for this pass type used by Advantage
+        type: number
+        format: integer
+        example: 5
+      description:
+        description: Descriptive name of the pass type
+        type: string
+        example: 'Pass Type Desc'
+      passClassId:
+        description: Pass class id
+        type: number
+        format: integer
+        example: 1
+      passLayoutType:
+        description: Pass layout type
+        type: number
+        format: integer
+        example: 1
+      passLayout:
+        description: Pass layout id
+        type: number
+        format: integer
+        example: 1
+      startDate:
+        description: Start Date
+        type: string
+        format: date-time
+        example: 2016-01-01T01:00:00Z
+      endDays:
+        description: End days
+        type: number
+        format: integer
+        example: 7
+      maxUses:
+        description: Max uses count
+        type: number
+        format: integer
+        example: 20
+      maxUsesPerDay:
+        description: Max uses count per day
+        type: number
+        format: integer
+        example: 10
+      maxDays:
+        description: Max days
+        type: number
+        format: integer
+        example: 1
+      buddyPasses:
+        description: Buddy passes
+        type: number
+        format: integer
+        example: 100
+      maxBuddyPassesPerDay:
+        description: Max buddy passes per day
+        type: number
+        format: integer
+        example: 100
+      discountId:
+        description: Id of discount
+        type: number
+        format: integer
+        example: 12
+      firstDayDiscountId:
+        description: Id of discount for first day
+        type: number
+        format: integer
+        example: 100
+      daysOfWeek:
+        description: Days of week
+        type: number
+        format: integer
+        example: 7
+      allowSaleWithoutCustomer:
+        description: Indicates if sale allowed without customer information
+        type: boolean
+        example: false
+      corporatePass:
+        description: Indicates if pass is cororate
+        type: boolean
+        example: false
+      minimumAge:
+        description: Minimum customer age
+        type: number
+        format: integer
+        example: 18
+      maximumAge:
+        description: Maximum customer age
+        type: number
+        format: integer
+        example: 60
+    required:
+    - passTypeId
+    - passTypeNo
+    - description
+  PassTypeSiteResponse:
+    title: Pass Type Site
+    type: object
+    properties:
+      _links:
+        $ref: '#/definitions/HalLinks'
+      siteId:
+        description: Site Id
+        type: string
+      passTypeId:
+        description: Pass Type Id
+        type: string
+      passTypeDescription:
+        description: 'Pass type description'
+        type: string
+    required:
+    - siteId
+    - passTypeId
+    - passTypeDescription
+  GetPassTypesResponse:
+    title: Get Pass Types response
+    type: object
+    allOf:
+    - properties:
+        _links:
+          allOf:
+          - $ref: '#/definitions/HalLinksPaginated'
+          example:
+            self:
+              href: /v1/customers/site/00000000-0000-0000-000000000000/passType?skip=100&take=100
+            prev:
+              href: /v1/customers/site/00000000-0000-0000-000000000000/passType?skip=0&take=100
+            next:
+              href: /v1/customers/site/00000000-0000-0000-000000000000/passType?skip=200&take=100
+        _embedded:
+          type: object
+          properties:
+            passTypes:
+              description: List of pass types
+              type: array
+              items:
+                $ref: '#/definitions/PassType'
+          required:
+          - passTypes
+        total:
+          description: Total number of pass types for this site
+          type: number
+          format: integer
+          example: 300
+        count:
+          description: Number of pass types in result set
+          type: number
+          format: integer
+          example: 100
+      required:
+      - total
+      - count
